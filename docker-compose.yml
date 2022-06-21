@@ -1,0 +1,24 @@
+version: "3.9"
+volumes:
+  db-store:
+services:
+  db:
+    build:
+      context: .
+      dockerfile: ./docker/mysql/Dockerfile
+    ports:
+      - target: 3306
+        published: 3306
+        protocol: tcp
+        mode: host
+    volumes:
+      - type: volume
+        source: db-store
+        target: /var/lib/mysql
+        volume:
+          nocopy: true
+    environment:
+      - MYSQL_DATABASE=yonda
+      - MYSQL_USER=k1rnt
+      - MYSQL_PASSWORD=k1rnt_pass
+      - MYSQL_ROOT_PASSWORD=k1rnt_pass
