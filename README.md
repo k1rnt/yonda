@@ -1,2 +1,10 @@
 # yonda
 本の進捗状況を管理
+
+# setup
+`docker compose up -d`
+
+# migrate
+golang-migrateが入ってたら1はスキップしておk
+1. `brew install golang-migrate`
+2. `migrate -source file://database/migrate -database 'mysql://k1rnt:k1rnt_pass@tcp(localhost:3306)/yonda' up`
