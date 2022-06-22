@@ -1,6 +1,8 @@
 package main
 
-import "github.com/k1rnt/yonda/api/router"
+import (
+	"github.com/k1rnt/yonda/api/router"
+)
 
 func main() {
 	router.Init()
