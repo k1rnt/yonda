@@ -17,7 +17,7 @@ func Init() {
 	conn := setupDB()
 	v1 := e.Group("/api/v1")
 	{
-		v1.GET("/", actions.BookAllAction{}.Invoke)
+		v1.GET("/", actions.BookAllAction{Conn: conn}.Invoke)
 		v1.POST("/book/register", actions.BookRegisterAction{Conn: conn}.Invoke)
 	}
 	e.GET("/ping", actions.PingAction{}.Invoke)
