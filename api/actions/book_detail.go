@@ -7,13 +7,14 @@ import (
 	"net/http"
 )
 
-type BookAllAction struct {
+type BookDetailAction struct {
 	Conn *gorm.DB
 }
 
-func (action BookAllAction) Invoke(c echo.Context) error {
-	var books []entity.Books
-	result := action.Conn.Where("deleted_at IS NULL").Find(&books)
+func (action BookDetailAction) Invoke(c echo.Context) error {
+	id := c.Param("id")
+	book := new(entity.Books)
+	result := action.Conn.Where("id = ?", id).First(&book)
 	if result.RowsAffected == 0 {
 		return c.JSON(http.StatusNotFound, &entity.ErrorResponse{
 			Status:  http.StatusNotFound,
@@ -23,5 +24,5 @@ func (action BookAllAction) Invoke(c echo.Context) error {
 	if result.Error != nil {
 		return result.Error
 	}
-	return c.JSON(http.StatusOK, &books)
+	return c.JSON(http.StatusOK, &book)
 }
