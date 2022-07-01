@@ -160,3 +160,4 @@ fabric.properties
 # this repo
 !.gitkeep
 /.idea/inspectionProfiles/Project_Default.xml
+.env
