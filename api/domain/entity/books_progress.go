@@ -1,9 +1,13 @@
 package entity
 
-import "github.com/jinzhu/gorm"
+import (
+	"time"
+)
 
 type BooksProgress struct {
-	gorm.Model
-	BookId   int `json:"book_id"`
-	Progress int `json:"progress"`
+	ID        uint `gorm:"primary_key"`
+	BooksId   uint `json:"books_id"`
+	Progress  int  `json:"progress"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
