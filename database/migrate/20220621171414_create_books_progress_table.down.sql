@@ -1,1 +1,1 @@
-DROP TABLE IF EXISTS books_progress;
+DROP TABLE IF EXISTS books_progresses;
