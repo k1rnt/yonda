@@ -2,8 +2,8 @@
 本の進捗状況を管理
 
 # setup
-`docker compose up -d`
-
+1. `docker compose up -d`
+2. `cp .env.example .env`
 # migrate
 golang-migrateが入ってたら1はスキップしておk
 1. `brew install golang-migrate`
