@@ -18,7 +18,7 @@ services:
         volume:
           nocopy: true
     environment:
-      - MYSQL_DATABASE=yonda
-      - MYSQL_USER=k1rnt
-      - MYSQL_PASSWORD=k1rnt_pass
-      - MYSQL_ROOT_PASSWORD=k1rnt_pass
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
