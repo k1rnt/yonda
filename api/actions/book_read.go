@@ -12,10 +12,15 @@ type BookReadAction struct {
 }
 
 func (action BookReadAction) Invoke(c echo.Context) error {
-	id := c.Param("id")
+	bookId := c.Param("id")
+	var bp entity.BooksProgress
+	if err := c.Bind(&bp); err != nil {
+		return err
+	}
 	book := new(entity.Books)
-	booksProgress := new(entity.BooksProgress)
-	result := action.Conn.Where("id = ?", id).First(&book)
+
+	// book exists
+	result := action.Conn.Where("id = ?", bookId).Where("deleted_at is null").First(&book)
 	if result.RowsAffected == 0 {
 		return c.JSON(http.StatusNotFound, &entity.ErrorResponse{
 			Status:  http.StatusNotFound,
@@ -26,16 +31,20 @@ func (action BookReadAction) Invoke(c echo.Context) error {
 		return result.Error
 	}
 
-	progress := action.Conn.Where("books_id = ?", book.ID).First(&booksProgress)
-	if err := c.Bind(&booksProgress); err != nil {
-		return err
+	existsProgress := new(entity.BooksProgress)
+	pg := action.Conn.Where("books_id = ?", book.ID).First(&existsProgress)
+	booksProgress := map[string]interface{}{
+		"id":       existsProgress.ID,
+		"books_id": book.ID,
+		"progress": bp.Progress,
 	}
-	if progress.RowsAffected == 0 {
+
+	if pg.RowsAffected == 0 {
 		// create book progress
 		action.Conn.Create(&booksProgress)
 	} else {
 		// update book progress
-		action.Conn.Save(&booksProgress)
+		action.Conn.Model(&existsProgress).Where("books_id = ?", book.ID).Update("progress", bp.Progress)
 	}
 	return c.JSON(http.StatusOK, &book)
 }
