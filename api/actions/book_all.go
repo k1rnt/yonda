@@ -12,16 +12,18 @@ type BookAllAction struct {
 }
 
 func (action BookAllAction) Invoke(c echo.Context) error {
-	var books []entity.Books
-	result := action.Conn.Where("deleted_at IS NULL").Find(&books)
-	if result.RowsAffected == 0 {
+	var books []entity.BookDetails
+	results := action.Conn.Table("books").Select(
+		[]string{"books.id", "books.name", "books.author", "books.desc", "books_progresses.progress"}).Joins(
+		"LEFT JOIN books_progresses ON books.id = books_progresses.books_id").Where("books.deleted_at IS NULL").Scan(&books)
+	if results.RowsAffected == 0 {
 		return c.JSON(http.StatusNotFound, &entity.ErrorResponse{
 			Status:  http.StatusNotFound,
 			Message: "Book not found",
 		})
 	}
-	if result.Error != nil {
-		return result.Error
+	if results.Error != nil {
+		return results.Error
 	}
 	return c.JSON(http.StatusOK, &books)
 }
