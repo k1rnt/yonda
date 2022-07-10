@@ -14,7 +14,7 @@ type BookDetailAction struct {
 func (action BookDetailAction) Invoke(c echo.Context) error {
 	id := c.Param("id")
 	book := new(entity.Books)
-	result := action.Conn.Where("id = ?", id).First(&book)
+	result := action.Conn.Where("id = ?", id).Where("books.deleted_at IS NULL").First(&book)
 	if result.RowsAffected == 0 {
 		return c.JSON(http.StatusNotFound, &entity.ErrorResponse{
 			Status:  http.StatusNotFound,
