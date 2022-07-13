@@ -13,8 +13,10 @@ type BookDetailAction struct {
 
 func (action BookDetailAction) Invoke(c echo.Context) error {
 	id := c.Param("id")
-	book := new(entity.Books)
-	result := action.Conn.Where("id = ?", id).Where("books.deleted_at IS NULL").First(&book)
+	book := new(entity.BookDetails)
+	result := action.Conn.Table("books").Select(
+		[]string{"books.id", "books.name", "books.author", "books.desc", "books_progresses.progress"}).Joins(
+		"LEFT JOIN books_progresses ON books.id = books_progresses.books_id").Where("books.id = ?", id).Where("books.deleted_at IS NULL").Scan(&book)
 	if result.RowsAffected == 0 {
 		return c.JSON(http.StatusNotFound, &entity.ErrorResponse{
 			Status:  http.StatusNotFound,
