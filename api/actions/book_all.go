@@ -14,7 +14,7 @@ type BookAllAction struct {
 func (action BookAllAction) Invoke(c echo.Context) error {
 	var books []entity.BookDetails
 	results := action.Conn.Table("books").Select(
-		[]string{"books.id", "books.name", "books.author", "books.desc", "books_progresses.progress"}).Joins(
+		[]string{"books.id", "books.name", "books.author", "books.desc", "books.page_count", "books_progresses.page"}).Joins(
 		"LEFT JOIN books_progresses ON books.id = books_progresses.books_id").Where("books.deleted_at IS NULL").Scan(&books)
 	if results.RowsAffected == 0 {
 		return c.JSON(http.StatusNotFound, &entity.ErrorResponse{

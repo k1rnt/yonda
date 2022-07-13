@@ -33,10 +33,10 @@ func (action BookReadAction) Invoke(c echo.Context) error {
 
 	existsProgress := new(entity.BooksProgress)
 	pg := action.Conn.Where("books_id = ?", book.ID).First(&existsProgress)
-	booksProgress := map[string]interface{}{
-		"id":       existsProgress.ID,
-		"books_id": book.ID,
-		"progress": bp.Progress,
+	booksProgress := entity.BooksProgress{
+		ID:      existsProgress.ID,
+		BooksId: book.ID,
+		Page:    bp.Page,
 	}
 
 	if pg.RowsAffected == 0 {
@@ -44,7 +44,7 @@ func (action BookReadAction) Invoke(c echo.Context) error {
 		action.Conn.Create(&booksProgress)
 	} else {
 		// update book progress
-		action.Conn.Model(&existsProgress).Where("books_id = ?", book.ID).Update("progress", bp.Progress)
+		action.Conn.Model(&existsProgress).Where("books_id = ?", book.ID).Update("page", bp.Page)
 	}
 	return c.JSON(http.StatusOK, &book)
 }
