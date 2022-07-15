@@ -1,6 +1,7 @@
 package actions
 
 import (
+	validation "github.com/go-ozzo/ozzo-validation"
 	"github.com/jinzhu/gorm"
 	"github.com/k1rnt/yonda/api/domain/entity"
 	"github.com/labstack/echo/v4"
@@ -29,6 +30,15 @@ func (action BookReadAction) Invoke(c echo.Context) error {
 	}
 	if result.Error != nil {
 		return result.Error
+	}
+	err := validation.Errors{
+		"page": validation.Validate(bp.Page, validation.Required, validation.Min(1), validation.Max(book.PageCount)),
+	}.Filter()
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, &entity.ErrorResponse{
+			Status:  http.StatusBadRequest,
+			Message: err.Error(),
+		})
 	}
 
 	existsProgress := new(entity.BooksProgress)
