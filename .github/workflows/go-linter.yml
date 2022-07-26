@@ -17,3 +17,4 @@ jobs:
           version: v1.45.0
           skip-pkg-cache: true
           skip-build-cache: true
+          working-directory: api
