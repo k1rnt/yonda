@@ -15,7 +15,7 @@ jobs:
       - name: lint
         uses: golangci/golangci-lint-action@v3
         with:
-          args: "--config=../.github/golangci.yml"
+          args: "--config=.github/golangci.yml"
           version: v1.45.0
           skip-pkg-cache: true
           skip-build-cache: true
