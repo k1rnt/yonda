@@ -11,6 +11,7 @@ func init() {
 	e = echo.New()
 }
 
+// Init initializes the application
 func Init() {
 	// conn := setupDB()
 	// v1 := e.Group("/api/v1")
@@ -24,6 +25,7 @@ func Init() {
 	e.GET("/ping", actions.PingAction{}.Invoke)
 }
 
+// Start starts the application
 func Start() {
 	e.Logger.Fatal(e.Start(":3000"))
 }
