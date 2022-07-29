@@ -8,3 +8,9 @@
 golang-migrateが入ってたら1はスキップしておk
 1. `brew install golang-migrate`
 2. `migrate -source file://database/migrate -database 'mysql://k1rnt:k1rnt_pass@tcp(localhost:3306)/yonda' up`
+
+# golangci-lint
+golangci-lintが入ってたら1はスキップしておk  
+1. `brew install golangci-lint`
+2. `cd api`
+3. `golangci-lint run --config=golangci.yml`
