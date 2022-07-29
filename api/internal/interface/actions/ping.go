@@ -6,8 +6,10 @@ import (
 	"net/http"
 )
 
+// PingAction is action struct
 type PingAction struct{}
 
+// Invoke ping action
 func (action PingAction) Invoke(c echo.Context) error {
 	status := responder.NewPingResponder(http.StatusOK, "pong")
 	return status.Emit(c)
