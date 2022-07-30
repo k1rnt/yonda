@@ -4,7 +4,6 @@ import (
 	validation "github.com/go-ozzo/ozzo-validation"
 	"github.com/k1rnt/yonda/api/internal/domain/entity"
 	"github.com/labstack/echo/v4"
-	"net/http"
 )
 
 type BookRegisterRequest struct {
@@ -20,10 +19,10 @@ func NewBookRegisterRequest() *BookRegisterRequest {
 
 func (r *BookRegisterRequest) Bind(c echo.Context) error {
 	if err := c.Bind(r); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return err
 	}
 	if err := r.validate(); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return err
 	}
 	return nil
 }
