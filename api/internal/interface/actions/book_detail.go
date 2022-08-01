@@ -2,7 +2,9 @@ package actions
 
 import (
 	"github.com/jinzhu/gorm"
-	"github.com/k1rnt/yonda/api/internal/domain/entity"
+	request "github.com/k1rnt/yonda/api/internal/interface/request/book"
+	responder "github.com/k1rnt/yonda/api/internal/interface/responder/book"
+	usecase "github.com/k1rnt/yonda/api/internal/usecase/book"
 	"github.com/labstack/echo/v4"
 	"net/http"
 )
@@ -12,19 +14,19 @@ type BookDetailAction struct {
 }
 
 func (action BookDetailAction) Invoke(c echo.Context) error {
-	id := c.Param("id")
-	book := new(entity.BookDetails)
-	result := action.Conn.Table("books").Select(
-		[]string{"books.id", "books.name", "books.author", "books.desc", "books.page_count", "books_progresses.page"}).Joins(
-		"LEFT JOIN books_progresses ON books.id = books_progresses.books_id").Where("books.id = ?", id).Where("books.deleted_at IS NULL").Scan(&book)
-	if result.RowsAffected == 0 {
-		return c.JSON(http.StatusNotFound, &entity.ErrorResponse{
-			Status:  http.StatusNotFound,
-			Message: "Book not found",
-		})
+	req := request.NewBookDetailRequest()
+	if err := req.Param(c, "id"); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
-	if result.Error != nil {
-		return result.Error
+	u := usecase.NewBookDetailUsecase(action.Conn)
+	book, err := u.Detail(req.ID)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
-	return c.JSON(http.StatusOK, &book)
+	if len(*book) == 0 {
+		return echo.NewHTTPError(http.StatusNotFound, "Book not found")
+	}
+
+	resp := responder.NewDetailBookResponder(http.StatusOK, "Book detail success", book)
+	return resp.Emit(c)
 }
