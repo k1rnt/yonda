@@ -3,7 +3,7 @@ package actions
 import (
 	validation "github.com/go-ozzo/ozzo-validation"
 	"github.com/jinzhu/gorm"
-	"github.com/k1rnt/yonda/api/domain/entity"
+	"github.com/k1rnt/yonda/api/internal/domain/entity"
 	"github.com/labstack/echo/v4"
 	"net/http"
 )
