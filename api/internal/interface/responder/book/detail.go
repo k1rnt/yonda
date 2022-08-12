@@ -8,10 +8,10 @@ import (
 type DetailBookResponder struct {
 	Status  int
 	Message string
-	Book    *[]dto.BookDetail
+	Book    *dto.BookDetail
 }
 
-func NewDetailBookResponder(status int, message string, book *[]dto.BookDetail) *DetailBookResponder {
+func NewDetailBookResponder(status int, message string, book *dto.BookDetail) *DetailBookResponder {
 	return &DetailBookResponder{
 		Status:  status,
 		Message: message,

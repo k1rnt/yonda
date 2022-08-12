@@ -13,7 +13,7 @@ func NewBookDetailRepository(conn *gorm.DB) BookDetailRepository {
 	return BookDetailRepository{Conn: conn}
 }
 
-func (conn BookDetailRepository) Run(id int) (*[]dto.BookDetail, error) {
+func (conn BookDetailRepository) Run(id int) (*dto.BookDetail, *gorm.DB) {
 	query := `
 		select
 			books.id,
@@ -30,10 +30,12 @@ func (conn BookDetailRepository) Run(id int) (*[]dto.BookDetail, error) {
 		and
 		    books.deleted_at is null
 	`
-	var book []dto.BookDetail
-	err := conn.Conn.Raw(query, id).Scan(&book).Error
-	if err != nil {
-		return nil, err
-	}
-	return &book, nil
+	var book dto.BookDetail
+	result := conn.Conn.Raw(query, id).Scan(&book)
+	return &book, result
+}
+
+func (conn BookDetailRepository) Exist(id int) bool {
+	_, result := conn.Run(id)
+	return result.RowsAffected != 0
 }
