@@ -16,10 +16,10 @@ func NewBookDetailUsecase(conn *gorm.DB) BookDetailUsecase {
 	}
 }
 
-func (u BookDetailUsecase) Detail(id int) (*[]dto.BookDetail, error) {
-	book, err := u.processor.Run(id)
-	if err != nil {
-		return nil, err
-	}
-	return book, nil
+func (u BookDetailUsecase) Detail(id int) (*dto.BookDetail, *gorm.DB) {
+	return u.processor.Run(id)
+}
+
+func (u BookDetailUsecase) Exist(id int) bool {
+	return u.processor.Exist(id)
 }

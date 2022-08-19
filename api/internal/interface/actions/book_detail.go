@@ -19,11 +19,8 @@ func (action BookDetailAction) Invoke(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 	u := usecase.NewBookDetailUsecase(action.Conn)
-	book, err := u.Detail(req.ID)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
-	}
-	if len(*book) == 0 {
+	book, _ := u.Detail(req.ID)
+	if !u.Exist(req.ID) {
 		return echo.NewHTTPError(http.StatusNotFound, "Book not found")
 	}
 
