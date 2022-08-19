@@ -14,6 +14,11 @@ golang-migrateが入ってたら1はスキップしておk
 1. `cd api`
 2. `go run cmd/yonda/*.go`
 
+# hot reload run
+1. `cd api`
+2. `go get -u github.com/cosmtrek/air`
+3. `air`
+
 # golangci-lint
 golangci-lintが入ってたら1はスキップしておk  
 1. `brew install golangci-lint`
