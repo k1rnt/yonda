@@ -158,6 +158,7 @@ fabric.properties
 .idea/caches/build_file_checksums.ser
 
 # this repo
+tmp
 !.gitkeep
 /.idea
 .env
