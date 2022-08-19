@@ -20,7 +20,7 @@ func Init() {
 	{
 		v1.GET("/", actions.BookAllAction{Conn: conn}.Invoke)
 		v1.GET("/book/:id", actions.BookDetailAction{Conn: conn}.Invoke)
-		// v1.POST("/book/:id", actions.BookReadAction{Conn: conn}.Invoke)
+		v1.POST("/book/:id", actions.BookReadAction{Conn: conn}.Invoke)
 		// v1.POST("/book/delete/:id", actions.BookDeleteAction{Conn: conn}.Invoke)
 		v1.POST("/book/register", actions.BookRegisterAction{Conn: conn}.Invoke)
 	}
@@ -29,6 +29,7 @@ func Init() {
 
 // Start starts the application
 func Start() {
+	e.Debug = true
 	e.Logger.Fatal(e.Start(":3000"))
 }
 

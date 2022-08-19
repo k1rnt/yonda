@@ -1,11 +1,13 @@
 package actions
 
 import (
-	validation "github.com/go-ozzo/ozzo-validation"
 	"github.com/jinzhu/gorm"
-	"github.com/k1rnt/yonda/api/internal/domain/entity"
+	request "github.com/k1rnt/yonda/api/internal/interface/request/book"
+	responder "github.com/k1rnt/yonda/api/internal/interface/responder/book"
+	usecase "github.com/k1rnt/yonda/api/internal/usecase/book"
 	"github.com/labstack/echo/v4"
 	"net/http"
+	"strconv"
 )
 
 type BookReadAction struct {
@@ -13,48 +15,24 @@ type BookReadAction struct {
 }
 
 func (action BookReadAction) Invoke(c echo.Context) error {
-	bookId := c.Param("id")
-	var bp entity.BooksProgress
-	if err := c.Bind(&bp); err != nil {
-		return err
+	req := request.NewBookReadRequest()
+	if err := req.Param(c, "id"); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
-	book := new(entity.Books)
-
-	// book exists
-	result := action.Conn.Where("id = ?", bookId).Where("deleted_at is null").First(&book)
-	if result.RowsAffected == 0 {
-		return c.JSON(http.StatusNotFound, &entity.ErrorResponse{
-			Status:  http.StatusNotFound,
-			Message: "Book not found",
-		})
+	id, _ := strconv.ParseUint(req.ID, 10, 64)
+	u := usecase.NewBookReadUsecase(action.Conn)
+	ok := u.BookExist(id)
+	if !ok {
+		return echo.NewHTTPError(http.StatusNotFound, "Book not found")
 	}
-	if result.Error != nil {
-		return result.Error
+	book := u.GetBook(id)
+	if err := req.Bind(c, book); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
-	err := validation.Errors{
-		"page": validation.Validate(bp.Page, validation.Required, validation.Min(1), validation.Max(book.PageCount)),
-	}.Filter()
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, &entity.ErrorResponse{
-			Status:  http.StatusBadRequest,
-			Message: err.Error(),
-		})
+	if err := u.Read(req); err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
-	existsProgress := new(entity.BooksProgress)
-	pg := action.Conn.Where("books_id = ?", book.ID).First(&existsProgress)
-	booksProgress := entity.BooksProgress{
-		ID:      existsProgress.ID,
-		BooksId: book.ID,
-		Page:    bp.Page,
-	}
-
-	if pg.RowsAffected == 0 {
-		// create book progress
-		action.Conn.Create(&booksProgress)
-	} else {
-		// update book progress
-		action.Conn.Model(&existsProgress).Where("books_id = ?", book.ID).Update("page", bp.Page)
-	}
-	return c.JSON(http.StatusOK, &book)
+	resp := responder.NewReadBookResponder(http.StatusOK, "Book read success")
+	return resp.Emit(c)
 }
