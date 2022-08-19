@@ -1,9 +1,11 @@
 package request
 
 import (
-	validation "github.com/go-ozzo/ozzo-validation"
-	"github.com/labstack/echo/v4"
 	"strconv"
+
+	"github.com/labstack/echo/v4"
+
+	validation "github.com/go-ozzo/ozzo-validation"
 )
 
 type BookDetailRequest struct {

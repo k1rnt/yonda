@@ -28,7 +28,6 @@ func (r *BookReadRequest) Bind(c echo.Context, book *dto.BookDetail) error {
 		return err
 	}
 	if err2 := r.validateBind(book); err2 != nil {
-
 		return err2
 	}
 	return nil
