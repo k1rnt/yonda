@@ -1,12 +1,11 @@
 package actions
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/jinzhu/gorm"
-	"github.com/k1rnt/yonda/api/internal/domain/entity"
 	request "github.com/k1rnt/yonda/api/internal/interface/request/book"
+	eresponder "github.com/k1rnt/yonda/api/internal/interface/responder"
 	responder "github.com/k1rnt/yonda/api/internal/interface/responder/book"
 	usecase "github.com/k1rnt/yonda/api/internal/usecase/book"
 	"github.com/labstack/echo/v4"
@@ -27,11 +26,7 @@ func (action BookRegisterAction) Invoke(c echo.Context) error {
 	u := usecase.NewRegisterBookUsecase(action.Conn)
 	save := u.Register(books)
 	if save.Error != nil {
-		log.Println(save.Error)
-		return c.JSON(http.StatusInternalServerError, &entity.ErrorResponse{
-			Status:  http.StatusInternalServerError,
-			Message: "Internal server error",
-		})
+		return eresponder.NewErrorResponder(http.StatusInternalServerError, "Internal Server Error").Emit(c)
 	}
 	resp := responder.NewRegisterBookResponder(http.StatusOK, "Book register success", books)
 	return resp.Emit(c)
