@@ -20,7 +20,7 @@ type BookRegisterAction struct {
 func (action BookRegisterAction) Invoke(c echo.Context) error {
 	req := request.NewBookRegisterRequest()
 	if err := req.Bind(c); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return eresponder.NewErrorResponder(http.StatusBadRequest, err.Error()).Emit(c)
 	}
 	books := req.ToBooks()
 	u := usecase.NewRegisterBookUsecase(action.Conn)
