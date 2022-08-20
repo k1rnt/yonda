@@ -20,20 +20,16 @@ linters-settings:
 linters:
   disable-all: true
   enable:
-    - bodyclose
     - deadcode
     - dogsled
-    - dupl
     - errcheck
     - goconst
     - gofmt
     - goimports
-    - revive
     - govet
     - ineffassign
     - misspell
     - exportloopref
-    - structcheck
     - unconvert
     - unused
     - varcheck

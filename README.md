@@ -4,10 +4,20 @@
 # setup
 1. `docker compose up -d`
 2. `cp .env.example .env`
+
 # migrate
 golang-migrateが入ってたら1はスキップしておk
 1. `brew install golang-migrate`
 2. `migrate -source file://database/migrate -database 'mysql://k1rnt:k1rnt_pass@tcp(localhost:3306)/yonda' up`
+
+# api run
+1. `cd api`
+2. `go run cmd/yonda/*.go`
+
+# hot reload run
+1. `cd api`
+2. `go get -u github.com/cosmtrek/air`
+3. `air`
 
 # golangci-lint
 golangci-lintが入ってたら1はスキップしておk  
