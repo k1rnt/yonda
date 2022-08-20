@@ -1,9 +1,10 @@
 package actions
 
 import (
+	"net/http"
+
 	responder "github.com/k1rnt/yonda/api/internal/interface/responder/ping"
 	"github.com/labstack/echo/v4"
-	"net/http"
 )
 
 // PingAction is action struct

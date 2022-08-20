@@ -1,9 +1,10 @@
 package request
 
 import (
+	"strconv"
+
 	validation "github.com/go-ozzo/ozzo-validation"
 	"github.com/labstack/echo/v4"
-	"strconv"
 )
 
 type BookDeleteRequest struct {
