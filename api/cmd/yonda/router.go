@@ -21,7 +21,7 @@ func Init() {
 		v1.GET("/", actions.BookAllAction{Conn: conn}.Invoke)
 		v1.GET("/book/:id", actions.BookDetailAction{Conn: conn}.Invoke)
 		v1.POST("/book/:id", actions.BookReadAction{Conn: conn}.Invoke)
-		// v1.POST("/book/delete/:id", actions.BookDeleteAction{Conn: conn}.Invoke)
+		v1.POST("/book/delete/:id", actions.DeleteBookAction{Conn: conn}.Invoke)
 		v1.POST("/book/register", actions.BookRegisterAction{Conn: conn}.Invoke)
 	}
 	e.GET("/ping", actions.PingAction{}.Invoke)
