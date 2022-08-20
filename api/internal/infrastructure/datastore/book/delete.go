@@ -1,9 +1,10 @@
 package datastore
 
 import (
+	"time"
+
 	"github.com/jinzhu/gorm"
 	"github.com/k1rnt/yonda/api/internal/domain/entity"
-	"time"
 )
 
 type DeleteBookDatastore struct {
